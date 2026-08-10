@@ -1,15 +1,18 @@
 import pandas as pd
 import streamlit as st
 
-# Load your actual compressed CSV file
-df = pd.read_csv("table.csv.gz")
+# Load with encoding specified to handle Irish fadas safely
+@st.cache_data
+def load_data():
+    return pd.read_csv("table.csv.gz", encoding="latin1")
+
+df = load_data()
 
 st.title("Raidió na Gaeltachta Archive")
 
 # --- Filters Section ---
 st.subheader("Filter Archive")
 
-# Search boxes mapped to your actual columns
 laithreoir_query = st.text_input("Search by Láithreoir (Presenter):")
 abhar_query = st.text_input("Search by Ábhar (Subject):")
 
