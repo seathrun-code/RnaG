@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 # Set up the page configuration for a wide, clean layout
-st.set_page_config(page_title="Raidió na Gaeltachta Archive", layout="wide")
+st.set_page_config(page_title="Cartlann Raidió na Gaeltachta", layout="wide")
 
 
 # Load the compressed CSV archive with caching enabled for fast performance
@@ -15,8 +15,8 @@ def load_data():
 df = load_data()
 
 # App Header
-st.title("Raidió na Gaeltachta Archive")
-st.subheader("Search and Filter Archive")
+st.title("Cartlann Raidió na Gaeltachta")
+st.subheader("Cuardaigh agus Scag sa gCartlann")
 
 
 # --- Callback to Reset Filters ---
@@ -29,7 +29,7 @@ def reset_filters():
 
 # --- General Search Box ---
 search_query = st.text_input(
-    "General Search (Searches across presenters, subjects, programmes, guests, etc.):",
+    "Cuardach Ginearálta (Cuardaigh trasna láithreoirí, léiritheoirí, cláir, ábhar srl.):",
     key="search_box",
 )
 
@@ -39,19 +39,19 @@ col1, col2, col3 = st.columns(3)
 with col1:
     programmes = ["All"] + sorted(df["Clár"].dropna().astype(str).unique())
     selected_prog = st.selectbox(
-        "Select Clár (Programme):", programmes, key="prog_select"
+        "Roghnaigh Clár:", programmes, key="prog_select"
     )
 
 with col2:
     presenters = ["All"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
     selected_presenter = st.selectbox(
-        "Select Láithreoir (Presenter):", presenters, key="pres_select"
+        "Roghnaigh Láithreoir:", presenters, key="pres_select"
     )
 
 with col3:
     rannoga = ["All"] + sorted(df["Rannóg"].dropna().astype(str).unique())
     selected_rannog = st.selectbox(
-        "Select Rannóg (Category):", rannoga, key="rannog_select"
+        "Roghnaigh Rannóg:", rannoga, key="rannog_select"
     )
 
 # --- Clear Filters Button ---
