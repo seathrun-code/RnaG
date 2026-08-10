@@ -9,6 +9,8 @@ hide_github_style = """
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
+    .stAppViewContainer footer {visibility: hidden;}
+    .viewerBadge_container__1QSob {visibility: hidden;}
     </style>
 """
 st.markdown(hide_github_style, unsafe_allow_html=True)
