@@ -1,33 +1,33 @@
 import pandas as pd
 import streamlit as st
 
-# Load your data (make sure this matches your actual filename)
+# Load your actual compressed CSV file
 df = pd.read_csv("table.csv.gz")
 
-st.title("Cartlann Raidió na Gaeltachta")
+st.title("Raidió na Gaeltachta Archive")
 
 # --- Filters Section ---
 st.subheader("Filter Archive")
 
-# Separate search boxes
-presenter_query = st.text_input("Search by Presenter:")
-placename_query = st.text_input("Search by Placename:")
+# Search boxes mapped to your actual columns
+laithreoir_query = st.text_input("Search by Láithreoir (Presenter):")
+abhar_query = st.text_input("Search by Ábhar (Subject):")
 
 # --- Apply Filters ---
 filtered_df = df.copy()
 
-if presenter_query:
+if laithreoir_query:
     filtered_df = filtered_df[
-        filtered_df["Presenter"]
+        filtered_df["Láithreoir"]
         .astype(str)
-        .str.contains(presenter_query, case=False, na=False)
+        .str.contains(laithreoir_query, case=False, na=False)
     ]
 
-if placename_query:
+if abhar_query:
     filtered_df = filtered_df[
-        filtered_df["Placename"]
+        filtered_df["Ábhar"]
         .astype(str)
-        .str.contains(placename_query, case=False, na=False)
+        .str.contains(abhar_query, case=False, na=False)
     ]
 
 # Display the filtered table
