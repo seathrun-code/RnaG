@@ -37,25 +37,25 @@ search_query = st.text_input(
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    programmes = ["All"] + sorted(df["Clár"].dropna().astype(str).unique())
+    programmes = ["Gach Clár"] + sorted(df["Clár"].dropna().astype(str).unique())
     selected_prog = st.selectbox(
         "Roghnaigh Clár:", programmes, key="prog_select"
     )
 
 with col2:
-    presenters = ["All"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
+    presenters = ["Gach Láithreoir"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
     selected_presenter = st.selectbox(
         "Roghnaigh Láithreoir:", presenters, key="pres_select"
     )
 
 with col3:
-    rannoga = ["All"] + sorted(df["Rannóg"].dropna().astype(str).unique())
+    rannoga = ["Gach Rannóg"] + sorted(df["Rannóg"].dropna().astype(str).unique())
     selected_rannog = st.selectbox(
         "Roghnaigh Rannóg:", rannoga, key="rannog_select"
     )
 
 # --- Clear Filters Button ---
-st.button("Glan Filters", on_click=reset_filters)
+st.button("Glan Scagairí", on_click=reset_filters)
 
 
 # --- Apply Filters Logic ---
@@ -86,7 +86,7 @@ if selected_rannog != "All":
 
 
 # --- Display Results ---
-st.write(f"Showing {len(filtered_df)} records")
+st.write(f"Ag taispeáint {len(filtered_df)} taifead")
 
 # Display the interactive dataframe table
 st.dataframe(filtered_df, use_container_width=True)
