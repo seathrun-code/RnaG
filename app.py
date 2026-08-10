@@ -3,6 +3,15 @@ import streamlit as st
 
 # Set up the page configuration for a wide, clean layout
 st.set_page_config(page_title="Cartlann Raidió na Gaeltachta", layout="wide")
+# Hide the top-right header menu, including GitHub repo link and Fork button
+hide_github_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_github_style, unsafe_allow_html=True)
 
 
 # Load the compressed CSV archive and clean up string whitespace
