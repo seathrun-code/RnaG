@@ -113,10 +113,11 @@ filtered_df = filtered_df.reset_index(drop=True)
 # --- Display Results ---
 st.write(f"Ag taispeáint {len(filtered_df)} taifead")
 
-# Display the interactive dataframe table with row selection and pandas styler to strip the index
+# Display the interactive dataframe table with row selection and hidden index
 event = st.dataframe(
-    filtered_df.style.hide(axis="index"), 
+    filtered_df, 
     use_container_width=True,
+    hide_index=True,
     on_select="rerun",
     selection_mode="single-row"
 )
