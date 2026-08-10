@@ -22,9 +22,9 @@ st.subheader("Cuardaigh agus Scag")
 # --- Callback to Reset Filters ---
 def reset_filters():
     st.session_state.search_box = ""
-    st.session_state.prog_select = "All"
-    st.session_state.pres_select = "All"
-    st.session_state.rannog_select = "All"
+    st.session_state.prog_select = "Gach Clár"
+    st.session_state.pres_select = "Gach Láithreoir"
+    st.session_state.rannog_select = "Gach Rannóg"
 
 
 # --- General Search Box ---
@@ -37,19 +37,25 @@ search_query = st.text_input(
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    programmes = ["Gach Clár"] + sorted(df["Clár"].dropna().astype(str).unique())
+    programmes = ["Gach Clár"] + sorted(
+        df["Clár"].dropna().astype(str).unique()
+    )
     selected_prog = st.selectbox(
         "Roghnaigh Clár:", programmes, key="prog_select"
     )
 
 with col2:
-    presenters = ["Gach Láithreoir"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
+    presenters = ["Gach Láithreoir"] + sorted(
+        df["Láithreoir"].dropna().astype(str).unique()
+    )
     selected_presenter = st.selectbox(
         "Roghnaigh Láithreoir:", presenters, key="pres_select"
     )
 
 with col3:
-    rannoga = ["Gach Rannóg"] + sorted(df["Rannóg"].dropna().astype(str).unique())
+    rannoga = ["Gach Rannóg"] + sorted(
+        df["Rannóg"].dropna().astype(str).unique()
+    )
     selected_rannog = st.selectbox(
         "Roghnaigh Rannóg:", rannoga, key="rannog_select"
     )
@@ -61,7 +67,7 @@ st.button("Glan Scagairí", on_click=reset_filters)
 # --- Apply Filters Logic ---
 filtered_df = df.copy()
 
-# Apply General Search query if text is entered
+# Apply General Search query across all columns if text is entered
 if search_query:
     mask = (
         filtered_df.astype(str)
@@ -70,23 +76,22 @@ if search_query:
     )
     filtered_df = filtered_df[mask]
 
-# Filter by Programme if a specific one is chosen
-if selected_prog != "All":
+# Filter by Programme
+if selected_prog != "Gach Clár":
     filtered_df = filtered_df[filtered_df["Clár"].astype(str) == selected_prog]
 
-# Filter by Presenter if a specific one is chosen
-if selected_presenter != "All":
+# Filter by Presenter
+if selected_presenter != "Gach Láithreoir":
     filtered_df = filtered_df[
         filtered_df["Láithreoir"].astype(str) == selected_presenter
     ]
 
-# Filter by Category if a specific one is chosen
-if selected_rannog != "All":
-    filtered_df = filtered_df[filtered_df["Rannóg"].astype(str) == selected_rannog]
-
+# Filter by Rannóg
+if selected_rannog != "Gach Rannóg":
+    filtered_df = filtered_df[
+        filtered_df["Rannóg"].astype(str) == selected_rannog
+    ]
 
 # --- Display Results ---
-st.write(f"Ag taispeáint {len(filtered_df)} taifead")
-
-# Display the interactive dataframe table
+st.write(f"Torthaí: **{len(filtered_df)}** iontráil faighte")
 st.dataframe(filtered_df, use_container_width=True)
