@@ -117,7 +117,6 @@ st.write(f"Ag taispeáint {len(filtered_df)} taifead")
 event = st.dataframe(
     filtered_df.style.hide(axis="index"), 
     use_container_width=True,
-    hide_index=True,
     on_select="rerun",
     selection_mode="single-row"
 )
