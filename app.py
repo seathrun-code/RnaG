@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 # Load your data (make sure this matches your actual filename)
-df = pd.read_csv("your_archive_data.csv.gz")
+df = pd.read_csv("table.csv.gz")
 
 st.title("Raidió na Gaeltachta Archive")
 
