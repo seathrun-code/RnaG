@@ -4,7 +4,7 @@ import streamlit as st
 # Load with encoding specified to handle Irish fadas safely
 @st.cache_data
 def load_data():
-    return pd.read_csv("table.csv.gz", encoding="latin1")
+    return pd.read_csv("RnG-1.1.csv.gz", encoding="latin1")
 
 df = load_data()
 
