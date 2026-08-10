@@ -18,29 +18,44 @@ df = load_data()
 st.title("Raidió na Gaeltachta Archive")
 st.subheader("Search and Filter Archive")
 
+
+# --- Callback to Reset Filters ---
+def reset_filters():
+    st.session_state.search_box = ""
+    st.session_state.prog_select = "All"
+    st.session_state.pres_select = "All"
+    st.session_state.rannog_select = "All"
+
+
 # --- General Search Box ---
-# Allows searching across any text or keyword in the dataset
 search_query = st.text_input(
-    "General Search (Searches across presenters, subjects, programmes, guests, etc.):"
+    "General Search (Searches across presenters, subjects, programmes, guests, etc.):",
+    key="search_box",
 )
 
-# --- Dropdown Filters Setup ---
+# --- Dropdown Filters Setup in Columns ---
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    # 1. Programme (Clár) filter dropdown
     programmes = ["All"] + sorted(df["Clár"].dropna().astype(str).unique())
-    selected_prog = st.selectbox("Select Clár (Programme):", programmes)
+    selected_prog = st.selectbox(
+        "Select Clár (Programme):", programmes, key="prog_select"
+    )
 
 with col2:
-    # 2. Presenter (Láithreoir) filter dropdown
     presenters = ["All"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
-    selected_presenter = st.selectbox("Select Láithreoir (Presenter):", presenters)
+    selected_presenter = st.selectbox(
+        "Select Láithreoir (Presenter):", presenters, key="pres_select"
+    )
 
 with col3:
-    # 3. Category (Rannóg) filter dropdown
     rannoga = ["All"] + sorted(df["Rannóg"].dropna().astype(str).unique())
-    selected_rannog = st.selectbox("Select Rannóg (Category):", rannoga)
+    selected_rannog = st.selectbox(
+        "Select Rannóg (Category):", rannoga, key="rannog_select"
+    )
+
+# --- Clear Filters Button ---
+st.button("Clear Filters", on_click=reset_filters)
 
 
 # --- Apply Filters Logic ---
@@ -48,7 +63,6 @@ filtered_df = df.copy()
 
 # Apply General Search query if text is entered
 if search_query:
-    # Combine all columns into a single string per row, convert to lowercase, and check for a match
     mask = (
         filtered_df.astype(str)
         .apply(lambda x: x.str.contains(search_query, case=False, na=False))
@@ -72,7 +86,6 @@ if selected_rannog != "All":
 
 
 # --- Display Results ---
-# Show how many records match the current search and filter criteria
 st.write(f"Showing {len(filtered_df)} records")
 
 # Display the interactive dataframe table
