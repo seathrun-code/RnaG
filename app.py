@@ -12,6 +12,7 @@ hide_github_style = """
     .stAppViewContainer footer {visibility: hidden;}
     div[data-testid="stStatusWidget"] {visibility: hidden;}
     .viewerBadge_container__1QSob {visibility: hidden;}
+    div.embeddedAppMetaInfoBar_container__DxxL1 {visibility: hidden;}
     </style>
 """
 st.markdown(hide_github_style, unsafe_allow_html=True)
