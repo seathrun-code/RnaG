@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 # Set up the page configuration for a wide, clean layout
-st.set_page_config(page_title="Raidió na Gaeltachta Archive", layout="wide")
+st.set_page_config(page_title="Cartlann Raidió na Gaeltachta", layout="wide")
 
 
 # Load the compressed CSV archive with caching enabled for fast performance
@@ -15,8 +15,8 @@ def load_data():
 df = load_data()
 
 # App Header
-st.title("Raidió na Gaeltachta Archive")
-st.subheader("Search and Filter Archive")
+st.title("Cartlann Raidió na Gaeltachta")
+st.subheader("Cuardaigh agus Scag")
 
 
 # --- Callback to Reset Filters ---
@@ -29,7 +29,7 @@ def reset_filters():
 
 # --- General Search Box ---
 search_query = st.text_input(
-    "General Search (Searches across presenters, subjects, programmes, guests, etc.):",
+    "Cuardach Ginearálta:",
     key="search_box",
 )
 
