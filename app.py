@@ -4,7 +4,7 @@ import streamlit as st
 # Load your data (make sure this matches your actual filename)
 df = pd.read_csv("table.csv.gz")
 
-st.title("Raidió na Gaeltachta Archive")
+st.title("Cartlann Raidió na Gaeltachta")
 
 # --- Filters Section ---
 st.subheader("Filter Archive")
