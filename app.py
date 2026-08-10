@@ -24,6 +24,8 @@ def load_data():
     # Clean whitespace from string columns to prevent mismatch issues
     for col in data.select_dtypes(include=["object"]).columns:
         data[col] = data[col].astype(str).str.strip()
+    # Reset index to ensure a clean sequence without hidden index residue
+    data = data.reset_index(drop=True)
     return data
 
 
@@ -104,11 +106,14 @@ if selected_presenter != "Gach Láithreoir":
 if selected_rannog != "Gach Rannóg":
     filtered_df = filtered_df[filtered_df["Rannóg"] == selected_rannog]
 
+# Reset the filtered dataframe's index so row selection references match cleanly
+filtered_df = filtered_df.reset_index(drop=True)
+
 
 # --- Display Results ---
 st.write(f"Ag taispeáint {len(filtered_df)} taifead")
 
-# Display the interactive dataframe table with row selection enabled
+# Display the interactive dataframe table with row selection and hidden index column
 event = st.dataframe(
     filtered_df, 
     use_container_width=True,
