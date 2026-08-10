@@ -1,10 +1,8 @@
 import pandas as pd
 import streamlit as st
 
-# Set up the page configuration for a clean layout
-st.set_page_config(
-    page_title="Raidió na Gaeltachta Archive", layout="wide"
-)
+# Set up the page configuration for a wide, clean layout
+st.set_page_config(page_title="Raidió na Gaeltachta Archive", layout="wide")
 
 
 # Load the compressed CSV archive with caching enabled for fast performance
@@ -18,24 +16,45 @@ df = load_data()
 
 # App Header
 st.title("Raidió na Gaeltachta Archive")
-st.subheader("Filter Archive")
+st.subheader("Search and Filter Archive")
+
+# --- General Search Box ---
+# Allows searching across any text or keyword in the dataset
+search_query = st.text_input(
+    "General Search (Searches across presenters, subjects, programmes, guests, etc.):"
+)
 
 # --- Dropdown Filters Setup ---
-# 1. Programme (Clár) filter dropdown
-programmes = ["All"] + sorted(df["Clár"].dropna().astype(str).unique())
-selected_prog = st.selectbox("Select Clár (Programme):", programmes)
+col1, col2, col3 = st.columns(3)
 
-# 2. Presenter (Láithreoir) filter dropdown
-presenters = ["All"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
-selected_presenter = st.selectbox("Select Láithreoir (Presenter):", presenters)
+with col1:
+    # 1. Programme (Clár) filter dropdown
+    programmes = ["All"] + sorted(df["Clár"].dropna().astype(str).unique())
+    selected_prog = st.selectbox("Select Clár (Programme):", programmes)
 
-# 3. Category (Rannóg) filter dropdown
-rannoga = ["All"] + sorted(df["Rannóg"].dropna().astype(str).unique())
-selected_rannog = st.selectbox("Select Rannóg (Category):", rannoga)
+with col2:
+    # 2. Presenter (Láithreoir) filter dropdown
+    presenters = ["All"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
+    selected_presenter = st.selectbox("Select Láithreoir (Presenter):", presenters)
+
+with col3:
+    # 3. Category (Rannóg) filter dropdown
+    rannoga = ["All"] + sorted(df["Rannóg"].dropna().astype(str).unique())
+    selected_rannog = st.selectbox("Select Rannóg (Category):", rannoga)
 
 
 # --- Apply Filters Logic ---
 filtered_df = df.copy()
+
+# Apply General Search query if text is entered
+if search_query:
+    # Combine all columns into a single string per row, convert to lowercase, and check for a match
+    mask = (
+        filtered_df.astype(str)
+        .apply(lambda x: x.str.contains(search_query, case=False, na=False))
+        .any(axis=1)
+    )
+    filtered_df = filtered_df[mask]
 
 # Filter by Programme if a specific one is chosen
 if selected_prog != "All":
@@ -53,7 +72,7 @@ if selected_rannog != "All":
 
 
 # --- Display Results ---
-# Show how many records match the current filter selection
+# Show how many records match the current search and filter criteria
 st.write(f"Showing {len(filtered_df)} records")
 
 # Display the interactive dataframe table
