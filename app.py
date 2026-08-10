@@ -10,6 +10,7 @@ hide_github_style = """
     header {visibility: hidden;}
     footer {visibility: hidden;}
     .stAppViewContainer footer {visibility: hidden;}
+    div[data-testid="stStatusWidget"] {visibility: hidden;}
     .viewerBadge_container__1QSob {visibility: hidden;}
     </style>
 """
