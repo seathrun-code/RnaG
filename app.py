@@ -5,10 +5,14 @@ import streamlit as st
 st.set_page_config(page_title="Cartlann Raidió na Gaeltachta", layout="wide")
 
 
-# Load the compressed CSV archive with caching enabled for fast performance
+# Load the compressed CSV archive and clean up string whitespace
 @st.cache_data
 def load_data():
-    return pd.read_csv("RnG-1.1.csv.gz", encoding="latin1")
+    data = pd.read_csv("RnG-1.1.csv.gz", encoding="latin1")
+    # Clean whitespace from string columns to prevent mismatch issues
+    for col in data.select_dtypes(include=["object"]).columns:
+        data[col] = data[col].astype(str).str.strip()
+    return data
 
 
 # Load the dataframe into memory
@@ -37,21 +41,25 @@ search_query = st.text_input(
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    programmes = ["Gach Clár"] + sorted(df["Clár"].dropna().astype(str).unique())
+    programmes = ["Gach Clár"] + sorted(
+        [str(x) for x in df["Clár"].dropna().unique() if x != "nan"]
+    )
     selected_prog = st.selectbox(
         "Roghnaigh Clár:", programmes, key="prog_select"
     )
 
 with col2:
     presenters = ["Gach Láithreoir"] + sorted(
-        df["Láithreoir"].dropna().astype(str).unique()
+        [str(x) for x in df["Láithreoir"].dropna().unique() if x != "nan"]
     )
     selected_presenter = st.selectbox(
         "Roghnaigh Láithreoir:", presenters, key="pres_select"
     )
 
 with col3:
-    rannoga = ["Gach Rannóg"] + sorted(df["Rannóg"].dropna().astype(str).unique())
+    rannoga = ["Gach Rannóg"] + sorted(
+        [str(x) for x in df["Rannóg"].dropna().unique() if x != "nan"]
+    )
     selected_rannog = st.selectbox(
         "Roghnaigh Rannóg:", rannoga, key="rannog_select"
     )
@@ -72,19 +80,17 @@ if search_query:
     )
     filtered_df = filtered_df[mask]
 
-# Filter by Programme if a specific one is chosen (matches "Gach Clár" default)
+# Filter by Programme
 if selected_prog != "Gach Clár":
-    filtered_df = filtered_df[filtered_df["Clár"].astype(str) == selected_prog]
+    filtered_df = filtered_df[filtered_df["Clár"] == selected_prog]
 
-# Filter by Presenter if a specific one is chosen (matches "Gach Láithreoir" default)
+# Filter by Presenter
 if selected_presenter != "Gach Láithreoir":
-    filtered_df = filtered_df[
-        filtered_df["Láithreoir"].astype(str) == selected_presenter
-    ]
+    filtered_df = filtered_df[filtered_df["Láithreoir"] == selected_presenter]
 
-# Filter by Category if a specific one is chosen (matches "Gach Rannóg" default)
+# Filter by Category
 if selected_rannog != "Gach Rannóg":
-    filtered_df = filtered_df[filtered_df["Rannóg"].astype(str) == selected_rannog]
+    filtered_df = filtered_df[filtered_df["Rannóg"] == selected_rannog]
 
 
 # --- Display Results ---
