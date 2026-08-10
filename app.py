@@ -12,7 +12,6 @@ hide_github_style = """
     .stAppViewContainer footer {visibility: hidden;}
     div[data-testid="stStatusWidget"] {visibility: hidden;}
     .viewerBadge_container__1QSob {visibility: hidden;}
-    div.embeddedAppMetaInfoBar_container__DxxL1 {visibility: hidden;}
     </style>
 """
 st.markdown(hide_github_style, unsafe_allow_html=True)
@@ -109,5 +108,22 @@ if selected_rannog != "Gach Rannóg":
 # --- Display Results ---
 st.write(f"Ag taispeáint {len(filtered_df)} taifead")
 
-# Display the interactive dataframe table
-st.dataframe(filtered_df, use_container_width=True)
+# Display the interactive dataframe table with row selection enabled
+event = st.dataframe(
+    filtered_df, 
+    use_container_width=True,
+    on_select="rerun",
+    selection_mode="single-row"
+)
+
+# --- Expanded Full Content View ---
+if len(event.selection["rows"]) > 0:
+    selected_index = event.selection["rows"][0]
+    selected_row = filtered_df.iloc[selected_index]
+    
+    with st.expander("Féach ar an Ábhar iomlán:", expanded=True):
+        st.write(f"**Clár:** {selected_row['Clár']}")
+        st.write(f"**Ábhar:**")
+        st.info(selected_row["Ábhar"])
+else:
+    st.caption("Cliceáil ar líne sa tábla chun an t-ábhar iomlán a fheiceáil.")
