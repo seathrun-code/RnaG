@@ -39,23 +39,23 @@ col1, col2, col3 = st.columns(3)
 with col1:
     programmes = ["All"] + sorted(df["Clár"].dropna().astype(str).unique())
     selected_prog = st.selectbox(
-        "Select Clár (Programme):", programmes, key="prog_select"
+        "Roghnaigh Clár:", programmes, key="prog_select"
     )
 
 with col2:
     presenters = ["All"] + sorted(df["Láithreoir"].dropna().astype(str).unique())
     selected_presenter = st.selectbox(
-        "Select Láithreoir (Presenter):", presenters, key="pres_select"
+        "Roghnaigh Láithreoir:", presenters, key="pres_select"
     )
 
 with col3:
     rannoga = ["All"] + sorted(df["Rannóg"].dropna().astype(str).unique())
     selected_rannog = st.selectbox(
-        "Select Rannóg (Category):", rannoga, key="rannog_select"
+        "Roghnaigh Rannóg:", rannoga, key="rannog_select"
     )
 
 # --- Clear Filters Button ---
-st.button("Clear Filters", on_click=reset_filters)
+st.button("Glan Filters", on_click=reset_filters)
 
 
 # --- Apply Filters Logic ---
