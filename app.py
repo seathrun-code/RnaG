@@ -111,8 +111,8 @@ st.write(f"Ag taispeáint {len(filtered_df)} taifead")
 # Display the interactive dataframe table with row selection enabled
 event = st.dataframe(
     filtered_df, 
-    hide_index=True,
     use_container_width=True,
+    hide_index=True,
     on_select="rerun",
     selection_mode="single-row"
 )
