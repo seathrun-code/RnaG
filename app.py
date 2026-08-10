@@ -24,6 +24,8 @@ def load_data():
     # Clean whitespace from string columns to prevent mismatch issues
     for col in data.select_dtypes(include=["object"]).columns:
         data[col] = data[col].astype(str).str.strip()
+# Rename 'Uimhir Aitheantais' to 'UID' (Change the string if your exact column header differs)
+    data = data.rename(columns={"Uimhir Aitheantais": "UID"})
     return data
 
 
