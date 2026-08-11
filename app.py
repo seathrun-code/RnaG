@@ -26,11 +26,12 @@ def load_data():
     for col in data.select_dtypes(include=["object"]).columns:
         data[col] = data[col].astype(str).str.strip()
 
-    # Convert and standardize date column to YYYY/MM/DD format (adjust column name if needed)
+# Safely convert and format the date column to YYYY/MM/DD
     if "Dáta Craol" in data.columns:
-        data["Dáta Craol"] = pd.to_datetime(data["Dáta Craol"], errors="coerce").dt.strftime("%Y/%m/%d")
-        # Fill missing/invalid dates back to empty string or keep as NaT if preferred
-        data["Dáta Craol"] = data["Dáta Craol"].fillna("")
+        # dayfirst=True ensures 31/12/2020 is read as Dec 31, not invalid month 31
+        parsed_dates = pd.to_datetime(data["Dáta Craol"], dayfirst=True, errors="coerce")
+        # Format to YYYY/MM/DD string so sorting works alphabetically & chronologically
+        data["Dáta Craol"] = parsed_dates.dt.strftime("%Y/%m/%d").fillna(data["Dáta Craol"])
     
     # Rename 'Uimhir Aitheantais' to 'UID' and handle potential truncation/variations safely
     rename_dict = {}
