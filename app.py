@@ -93,7 +93,7 @@ with col3:
     )
 
 # --- Clear Filters Button ---
-st.button("Glan Scagairí", on_click=reset_filters)
+st.button("Glan an Cuardach", on_click=reset_filters)
 
 
 # --- Apply Filters Logic ---
