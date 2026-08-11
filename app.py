@@ -26,11 +26,10 @@ def load_data():
     for col in data.select_dtypes(include=["object"]).columns:
         data[col] = data[col].astype(str).str.strip()
 
-# Convert 'Dáta Craol' to actual datetime objects, coercing errors (like '########') to NaT (Null)
-    if "Dáta Craol" in data.columns:
-        # Replace placeholder text with NaN so pandas doesn't fail
-        data["Dáta Craol"] = data["Dáta Craol"].replace(r"^[#]+$", pd.NA, regex=True)
-        data["Dáta Craol"] = pd.to_datetime(data["Dáta Craol"], dayfirst=True, errors="coerce")
+# Convert 'Dáta Craolta' from DD/MM/YYYY to YYYY/MM/DD text format for proper sorting
+    if "Dáta Craolta" in data.columns:
+        parsed_dates = pd.to_datetime(data["Dáta Craolta"], format="%d/%m/%Y", errors="coerce")
+        data["Dáta Craolta"] = parsed_dates.dt.strftime("%Y/%m/%d").fillna(data["Dáta Craolta"])
     
     # Rename 'Uimhir Aitheantais' to 'UID' and handle potential truncation/variations safely
     rename_dict = {}
