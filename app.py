@@ -47,7 +47,7 @@ st.subheader("Cuardaigh agus Scag")
 # --- Callback to Reset Filters ---
 def reset_filters():
     st.session_state.content_search = ""
-    st.session_state.pres_search = ""
+    st.session_state.prog_search = ""
     st.session_state.prog_select = "Gach Clár"
     st.session_state.pres_select = "Gach Láithreoir"
     st.session_state.rannog_select = "Gach Rannóg"
@@ -57,10 +57,10 @@ def reset_filters():
 col_search1, col_search2 = st.columns(2)
 
 with col_search1:
-    content_query = st.text_input("Cuardach san Ábhar:", key="content_search")
+    content_query = st.text_input("Cuardaigh san Ábhar:", key="content_search")
 
 with col_search2:
-    presenter_query = st.text_input("Cuardach de réir Láithreora (téacs):", key="pres_search")
+    prog_query = st.text_input("Cuardaigh de réir Cláir:", key="prog_search")
 
 # --- Dropdown Filters Setup in Columns ---
 col1, col2, col3 = st.columns(3)
@@ -100,9 +100,9 @@ filtered_df = df.copy()
 if content_query:
     filtered_df = filtered_df[filtered_df["Ábhar"].str.contains(content_query, case=False, na=False)]
 
-# Apply Targeted Presenter Filter
-if presenter_query:
-    filtered_df = filtered_df[filtered_df["Láithreoir"].str.contains(presenter_query, case=False, na=False)]
+# Apply Targeted Programme Filter
+if prog_query:
+    filtered_df = filtered_df[filtered_df["Clár"].str.contains(prog_query, case=False, na=False)]
 
 # Filter by Programme
 if selected_prog != "Gach Clár":
