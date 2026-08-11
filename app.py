@@ -3,7 +3,8 @@ import streamlit as st
 
 # Set up the page configuration for a wide, clean layout
 st.set_page_config(page_title="Cartlann Raidió na Gaeltachta", layout="wide")
-# Hide the top-right header menu, including GitHub repo link and Fork button
+
+# Hide the top-right header menu and footer elements
 hide_github_style = """
     <style>
     #MainMenu {visibility: hidden;}
@@ -24,8 +25,14 @@ def load_data():
     # Clean whitespace from string columns to prevent mismatch issues
     for col in data.select_dtypes(include=["object"]).columns:
         data[col] = data[col].astype(str).str.strip()
-# Rename 'Uimhir Aitheantais' to 'UID' (Change the string if your exact column header differs)
-    data = data.rename(columns={"Uimhir Aitheantais": "UID"})
+    
+    # Rename 'Uimhir Aitheantais' to 'UID' and handle potential truncation/variations safely
+    rename_dict = {}
+    for col in data.columns:
+        if "Uimhir Aitheant" in col or col == "Uimhir Aitheantais":
+            rename_dict[col] = "UID"
+    data = data.rename(columns=rename_dict)
+    
     return data
 
 
@@ -39,17 +46,21 @@ st.subheader("Cuardaigh agus Scag")
 
 # --- Callback to Reset Filters ---
 def reset_filters():
-    st.session_state.search_box = ""
+    st.session_state.content_search = ""
+    st.session_state.pres_search = ""
     st.session_state.prog_select = "Gach Clár"
     st.session_state.pres_select = "Gach Láithreoir"
     st.session_state.rannog_select = "Gach Rannóg"
 
 
-# --- General Search Box ---
-search_query = st.text_input(
-    "Cuardach Ginearálta:",
-    key="search_box",
-)
+# --- Targeted Search Inputs in Columns ---
+col_search1, col_search2 = st.columns(2)
+
+with col_search1:
+    content_query = st.text_input("Cuardach san Ábhar:", key="content_search")
+
+with col_search2:
+    presenter_query = st.text_input("Cuardach de réir Láithreora (téacs):", key="pres_search")
 
 # --- Dropdown Filters Setup in Columns ---
 col1, col2, col3 = st.columns(3)
@@ -85,14 +96,13 @@ st.button("Glan Scagairí", on_click=reset_filters)
 # --- Apply Filters Logic ---
 filtered_df = df.copy()
 
-# Apply General Search query if text is entered
-if search_query:
-    mask = (
-        filtered_df.astype(str)
-        .apply(lambda x: x.str.contains(search_query, case=False, na=False))
-        .any(axis=1)
-    )
-    filtered_df = filtered_df[mask]
+# Apply Targeted Content Filter
+if content_query:
+    filtered_df = filtered_df[filtered_df["Ábhar"].str.contains(content_query, case=False, na=False)]
+
+# Apply Targeted Presenter Filter
+if presenter_query:
+    filtered_df = filtered_df[filtered_df["Láithreoir"].str.contains(presenter_query, case=False, na=False)]
 
 # Filter by Programme
 if selected_prog != "Gach Clár":
