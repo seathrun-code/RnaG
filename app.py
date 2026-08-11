@@ -145,4 +145,4 @@ if len(event.selection["rows"]) > 0:
         st.write(f"**Ábhar:**")
         st.info(selected_row["Ábhar"])
 else:
-    st.caption("Cliceáil ar líne sa tábla chun an t-ábhar iomlán a fheiceáil.")
+    st.caption("Cliceáil faoi dhó ar líne sa tábla chun an t-ábhar iomlán a fheiceáil.")
