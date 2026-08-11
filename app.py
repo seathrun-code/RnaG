@@ -41,7 +41,7 @@ df = load_data()
 
 # App Header
 st.title("Cartlann Raidió na Gaeltachta")
-st.subheader("Cuardaigh agus Scag")
+st.subheader("Cuardaigh")
 
 
 # --- Callback to Reset Filters ---
@@ -61,6 +61,9 @@ with col_search1:
 
 with col_search2:
     prog_query = st.text_input("Cuardaigh sa gClár: (m.sh. 'Adhmhaidin')", key="prog_search")
+
+# --- Scag Subheader ---
+st.subheader("Scag")
 
 # --- Dropdown Filters Setup in Columns ---
 col1, col2, col3 = st.columns(3)
