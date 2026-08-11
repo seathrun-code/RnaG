@@ -60,7 +60,7 @@ with col_search1:
     content_query = st.text_input("Cuardaigh san Ábhar:", key="content_search")
 
 with col_search2:
-    prog_query = st.text_input("Cuardaigh de réir Cláir:", key="prog_search")
+    prog_query = st.text_input("Cuardaigh sa gClár: (m.sh. "Adhmhaidin")", key="prog_search")
 
 # --- Dropdown Filters Setup in Columns ---
 col1, col2, col3 = st.columns(3)
