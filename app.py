@@ -25,6 +25,12 @@ def load_data():
     # Clean whitespace from string columns to prevent mismatch issues
     for col in data.select_dtypes(include=["object"]).columns:
         data[col] = data[col].astype(str).str.strip()
+
+    # Convert and standardize date column to YYYY/MM/DD format (adjust column name if needed)
+    if "Dáta Craol" in data.columns:
+        data["Dáta Craol"] = pd.to_datetime(data["Dáta Craol"], errors="coerce").dt.strftime("%Y/%m/%d")
+        # Fill missing/invalid dates back to empty string or keep as NaT if preferred
+        data["Dáta Craol"] = data["Dáta Craol"].fillna("")
     
     # Rename 'Uimhir Aitheantais' to 'UID' and handle potential truncation/variations safely
     rename_dict = {}
