@@ -102,8 +102,8 @@ if search_query:
         t for t in tokens if not t.startswith("-") and not t.startswith("+")
     ]
 
-row_texts = filtered_df.astype(str).apply(lambda row: " ".join(row.values), axis=1).tolist()    
-choices_clean = [strip_accents(text).lower() for text in row_texts]
+    row_texts = filtered_df.astype(str).apply(lambda row: " ".join(row.values), axis=1).tolist()
+    choices_clean = [strip_accents(text).lower() for text in row_texts]
 
     valid_indices = set(range(len(filtered_df)))
 
