@@ -1,8 +1,10 @@
 import pandas as pd
 import streamlit as st
+from rapidfuzz import process, fuzz
 
 # Set up the page configuration for a wide, clean layout
 st.set_page_config(page_title="Cartlann Raidió na Gaeltachta", layout="wide")
+
 # Hide the top-right header menu, including GitHub repo link and Fork button
 hide_github_style = """
     <style>
@@ -24,7 +26,7 @@ def load_data():
     # Clean whitespace from string columns to prevent mismatch issues
     for col in data.select_dtypes(include=["object"]).columns:
         data[col] = data[col].astype(str).str.strip()
-# Rename 'Uimhir Aitheantais' to 'UID' (Change the string if your exact column header differs)
+    # Rename 'Uimhir Aitheantais' to 'UID'
     data = data.rename(columns={"Uimhir Aitheantais": "UID"})
     return data
 
@@ -85,14 +87,27 @@ st.button("Glan Scagairí", on_click=reset_filters)
 # --- Apply Filters Logic ---
 filtered_df = df.copy()
 
-# Apply General Search query if text is entered
+# Apply General Search query with RapidFuzz
 if search_query:
-    mask = (
-        filtered_df.astype(str)
-        .apply(lambda x: x.str.contains(search_query, case=False, na=False))
-        .any(axis=1)
+    # Combine row values into a single searchable text list
+    row_texts = filtered_df.astype(str).agg(" ".join, axis=1).tolist()
+    
+    # Lowercase everything to help standardise fadas and cases
+    query_lower = search_query.lower()
+    choices_lower = [text.lower() for text in row_texts]
+
+    # Find matches with a score above 75 (out of 100)
+    results = process.extract(
+        query_lower, 
+        choices_lower, 
+        scorer=fuzz.partial_ratio, 
+        limit=None, 
+        score_cutoff=75
     )
-    filtered_df = filtered_df[mask]
+    
+    # Extract the matching indices
+    matching_indices = [idx for _, _, idx in results]
+    filtered_df = filtered_df.iloc[matching_indices]
 
 # Filter by Programme
 if selected_prog != "Gach Clár":
