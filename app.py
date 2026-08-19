@@ -46,7 +46,7 @@ def reset_filters():
 
 
 search_query = st.text_input(
-    "Cuardach Ginearálta (suaimhneas: \"abairt\", -eisia, +cruinn):",
+    'Cuardach Ginearálta (abairt: "abairt", -eisia, +cruinn):',
     key="search_box",
 )
 
@@ -102,7 +102,6 @@ if search_query:
         t for t in tokens if not t.startswith("-") and not t.startswith("+")
     ]
 
-    # Safe cell-by-cell conversion
     row_texts = [" ".join(str(val) for val in row) for row in filtered_df.values]
     choices_clean = [strip_accents(text).lower() for text in row_texts]
 
@@ -129,23 +128,34 @@ if search_query:
             i for i in valid_indices if inc_clean in choices_clean[i]
         }
 
-    # Apply Normal Tokens (Fuzzy search on remaining subset)
+    # Apply Normal Tokens (Substring + Fuzzy fallback)
     if normal_tokens:
         normal_query_clean = strip_accents(" ".join(normal_tokens)).lower()
-        subset_choices = [choices_clean[i] for i in valid_indices]
-        subset_indices = list(valid_indices)
+
+        matched_indices = set()
+        subset_choices = []
+        subset_indices = []
+
+        for i in valid_indices:
+            if normal_query_clean in choices_clean[i]:
+                matched_indices.add(i)
+            else:
+                subset_choices.append(choices_clean[i])
+                subset_indices.append(i)
 
         if subset_choices:
             results = process.extract(
                 normal_query_clean,
                 subset_choices,
-                scorer=fuzz.WRatio,
+                scorer=fuzz.partial_ratio,
                 limit=None,
-                score_cutoff=65,
+                score_cutoff=80,
             )
-            valid_indices = {subset_indices[idx] for _, _, idx in results}
-        else:
-            valid_indices = set()
+            for _, score, idx in results:
+                if score >= 80:
+                    matched_indices.add(subset_indices[idx])
+
+        valid_indices = matched_indices
 
     filtered_df = filtered_df.iloc[list(valid_indices)]
 
