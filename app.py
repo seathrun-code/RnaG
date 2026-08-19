@@ -102,8 +102,8 @@ if search_query:
         t for t in tokens if not t.startswith("-") and not t.startswith("+")
     ]
 
-    # Robust and fast conversion to string rows
-    row_texts = [" ".join(row) for row in filtered_df.astype(str).values]
+    # Safe cell-by-cell conversion
+    row_texts = [" ".join(str(val) for val in row) for row in filtered_df.values]
     choices_clean = [strip_accents(text).lower() for text in row_texts]
 
     valid_indices = set(range(len(filtered_df)))
