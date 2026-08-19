@@ -46,7 +46,7 @@ def reset_filters():
 
 
 search_query = st.text_input(
-    'Cuardach Ginearálta (abairt: "abairt", -eisia, +cruinn):',
+    'Cuardach Ginearálta (Meaitseáil neamhbheacht i bhfeidhm (Sean=Seán=Séán), agus oibritheoirí cuardaigh m.sh. "Peil Ghaeltachta", +Seán, -Iomáint):',
     key="search_box",
 )
 
